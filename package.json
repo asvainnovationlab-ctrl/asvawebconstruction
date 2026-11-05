@@ -1,0 +1,50 @@
+{
+  "name": "asva-innovation-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Corporate website and CMS for Asva Innovation Lab Pvt. Ltd.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "build:shared": "npm run build -w @asva/shared",
+    "build": "npm run build:shared && npm run build -w @asva/api && npm run build -w @asva/web",
+    "dev": "npm run build:shared && concurrently -k -n shared,api,web -c gray,blue,cyan \"npm run dev -w @asva/shared\" \"npm run dev -w @asva/api\" \"npm run dev -w @asva/web\"",
+    "dev:api": "npm run dev -w @asva/api",
+    "dev:web": "npm run dev -w @asva/web",
+    "start:api": "npm run start -w @asva/api",
+    "start:web": "npm run start -w @asva/web",
+    "typecheck": "npm run build:shared && npm run typecheck -w @asva/api && npm run typecheck -w @asva/web",
+    "lint": "npm run lint -w @asva/api && npm run lint -w @asva/web",
+    "test": "npm run build:shared && npm run test -w @asva/shared && npm run test -w @asva/api && npm run test -w @asva/web",
+    "test:unit": "npm run test -w @asva/shared && npm run test:unit -w @asva/api && npm run test -w @asva/web",
+    "test:e2e": "npm run test:e2e -w @asva/web",
+    "db:generate": "npm run db:generate -w @asva/api",
+    "db:migrate": "npm run db:migrate -w @asva/api",
+    "db:migrate:deploy": "npm run db:migrate:deploy -w @asva/api",
+    "db:seed": "npm run db:seed -w @asva/api",
+    "db:seed:demo": "npm run db:seed:demo -w @asva/api",
+    "db:sync-permissions": "npm run db:sync-permissions -w @asva/api",
+    "db:reset": "npm run db:reset -w @asva/api",
+    "admin:create": "npm run admin:create -w @asva/api",
+    "audit:deps": "npm audit --omit=dev --audit-level=high"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "allowScripts": {
+    "@swc/core@1.16.20": true,
+    "argon2@0.45.1": true,
+    "prisma@7.10.1": true,
+    "unrs-resolver@1.12.2": true,
+    "@prisma/engines@7.10.1": true,
+    "esbuild@0.28.2": true
+  },
+  "overrides": {
+    "multer": "^2.5.0"
+  }
+}

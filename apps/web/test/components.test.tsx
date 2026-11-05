@@ -1,0 +1,100 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { DEFAULT_SETTINGS, type AuthUser } from '@asva/shared';
+import { Logo } from '@/components/brand/logo';
+import { AuthGate, RequirePermission } from '@/components/admin/auth';
+import { DataTable, StatusBadge } from '@/components/admin/ui';
+import { ProjectCard } from '@/components/site/cards';
+import { MobileNav, NavLink } from '@/components/site/header-client';
+import type { PublicSettings } from '@/lib/types';
+
+const settings = { ...DEFAULT_SETTINGS, media: { logoForDarkBg: null, logoForLightBg: null, logoIcon: null, favicon: null, ogImage: null, heroImage: null } } as unknown as PublicSettings;
+
+function withQuery(ui: React.ReactNode) {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return render(<QueryClientProvider client={client}>{ui}</QueryClientProvider>);
+}
+
+function mockMe(user: Partial<AuthUser> | null, status = 200) {
+  vi.spyOn(globalThis, 'fetch').mockImplementation(async () =>
+    user
+      ? new Response(JSON.stringify({ data: { id: '1', email: 'a@b.c', name: 'Test User', roles: [], lastLoginAt: null, permissions: [], ...user } }), { status })
+      : new Response(JSON.stringify({ error: { code: 'UNAUTHENTICATED', message: 'Please sign in' } }), { status: 401 }),
+  );
+}
+
+describe('Brand', () => {
+  it('renders the accessible vector logo, or an uploaded override', () => {
+    const { rerender } = render(<Logo />);
+    expect(screen.getByRole('img', { name: /asva innovation lab/i })).toBeInTheDocument();
+    rerender(<Logo uploaded={{ id: '1', url: '/api/v1/media/files/1/abc', alt: 'Official logo', caption: null, width: 200, height: 50, mimeType: 'image/png' }} />);
+    expect(screen.getByAltText('Official logo')).toBeInTheDocument();
+  });
+});
+
+describe('Navigation', () => {
+  it('marks the current page with aria-current', () => {
+    render(<NavLink item={{ id: '1', label: 'Home', href: '/', isExternal: false, openInNewTab: false }} />);
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
+  });
+  it('has an accessible mobile menu trigger', () => {
+    render(<MobileNav items={[{ id: '1', label: 'Services', href: '/services', isExternal: false, openInNewTab: false }]} settings={settings} />);
+    expect(screen.getByRole('button', { name: /open menu/i })).toBeInTheDocument();
+  });
+});
+
+describe('Public content rendering', () => {
+  it('labels sample projects so demo content is never mistaken for real work', () => {
+    render(
+      <ProjectCard
+        project={{ id: '1', title: 'Sample: Demo', slug: 'demo', summary: 'Demo summary', isFeatured: true, isSample: true, completedAt: null, featuredImage: null, category: { id: 'c', name: 'Web', slug: 'web' }, technologies: [{ id: 't', name: 'React', slug: 'react' }] }}
+      />,
+    );
+    expect(screen.getByText('Sample', { exact: true })).toBeInTheDocument();
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/portfolio/demo');
+    expect(screen.getByText(/Web.*React/)).toBeInTheDocument();
+  });
+});
+
+describe('Admin UI', () => {
+  it('shows loading skeletons and then an empty state', () => {
+    const { rerender } = render(<DataTable columns={[{ key: 'n', header: 'Name', cell: (r: { id: string }) => r.id }]} rows={undefined} loading />);
+    expect(document.querySelectorAll('[aria-hidden].animate-pulse').length).toBeGreaterThan(0);
+    rerender(<DataTable columns={[{ key: 'n', header: 'Name', cell: (r: { id: string }) => r.id }]} rows={[]} empty="Nothing yet" />);
+    expect(screen.getByText('Nothing yet')).toBeInTheDocument();
+  });
+
+  it('renders human-readable status badges', () => {
+    render(<StatusBadge status="PROPOSAL_SENT" />);
+    expect(screen.getByText('Proposal Sent')).toBeInTheDocument();
+  });
+
+  it('hides sections the user lacks permission for', async () => {
+    mockMe({ permissions: ['blog.manage'] });
+    withQuery(
+      <AuthGate>
+        <RequirePermission permission="settings.manage">
+          <p>Secret settings</p>
+        </RequirePermission>
+        <RequirePermission permission="blog.manage">
+          <p>Blog editor</p>
+        </RequirePermission>
+      </AuthGate>,
+    );
+    expect(await screen.findByText('Blog editor')).toBeInTheDocument();
+    expect(screen.queryByText('Secret settings')).not.toBeInTheDocument();
+    expect(screen.getByText(/don’t have access/i)).toBeInTheDocument();
+  });
+
+  it('shows a loading state while the session is being checked', () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(() => new Promise(() => undefined));
+    withQuery(
+      <AuthGate>
+        <p>Content</p>
+      </AuthGate>,
+    );
+    expect(screen.getByRole('status')).toHaveTextContent(/loading admin/i);
+    expect(screen.queryByText('Content')).not.toBeInTheDocument();
+  });
+});

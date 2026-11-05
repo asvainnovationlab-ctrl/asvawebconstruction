@@ -1,0 +1,91 @@
+# Local development & self-hosted stack.
+#
+#   docker compose up -d postgres mailpit        # just the infrastructure (run apps with npm run dev)
+#   docker compose --profile app up -d --build   # everything in containers
+#   docker compose --profile app run --rm api npx prisma migrate deploy
+#   docker compose --profile app run --rm api npx tsx prisma/seed.ts
+#   docker compose --profile app run --rm -it api npx tsx scripts/create-admin.ts
+#
+# Values below are for LOCAL use only. Never reuse them in production.
+
+name: asva
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: asva
+      POSTGRES_PASSWORD: asva-local-dev-password
+      POSTGRES_DB: asva
+    ports:
+      - '127.0.0.1:5432:5432' # bound to localhost only
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U asva -d asva']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Catches all outgoing email locally. UI: http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:v1.27
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:1025:1025'
+      - '127.0.0.1:8025:8025'
+
+  api:
+    profiles: [app]
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://asva:asva-local-dev-password@postgres:5432/asva?schema=public
+      FRONTEND_URL: http://localhost:3000
+      API_PUBLIC_URL: http://localhost:4000
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?set JWT_ACCESS_SECRET in .env}
+      TOKEN_HASH_SECRET: ${TOKEN_HASH_SECRET:?set TOKEN_HASH_SECRET in .env}
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:?set REVALIDATE_SECRET in .env}
+      WEB_REVALIDATE_URL: http://web:3000/api/revalidate
+      # Browsers treat http://localhost as a secure context, so Secure cookies work locally too.
+      COOKIE_SECURE: 'true'
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      EMAIL_FROM: 'Asva Innovation Lab <no-reply@localhost>'
+      STORAGE_PROVIDER: local
+      STORAGE_LOCAL_DIR: /app/apps/api/storage
+      SWAGGER_ENABLED: 'true'
+    volumes:
+      - media:/app/apps/api/storage
+    ports:
+      - '127.0.0.1:4000:4000'
+
+  web:
+    profiles: [app]
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: http://localhost:3000
+        API_INTERNAL_URL: http://api:4000
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      API_INTERNAL_URL: http://api:4000
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:?set REVALIDATE_SECRET in .env}
+      REVALIDATE_SECONDS: 300
+    ports:
+      - '127.0.0.1:3000:3000'
+
+volumes:
+  pgdata:
+  media:

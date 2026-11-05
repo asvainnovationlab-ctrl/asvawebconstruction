@@ -1,0 +1,32 @@
+import Link from 'next/link';
+import { Logo } from '@/components/brand/logo';
+import { Button } from '@/components/ui/button';
+import type { NavItem, PublicSettings } from '@/lib/types';
+import { HeaderShell, MobileNav, NavLink } from './header-client';
+
+export function SiteHeader({ items, settings }: { items: NavItem[]; settings: PublicSettings }) {
+  return (
+    <HeaderShell>
+      <div className="container-page flex h-16 items-center gap-8">
+        <Link href="/" className="shrink-0 rounded-sm" aria-label={`${settings.general.shortName} — home`}>
+          <Logo tone="dark" variant="full" className="h-9" uploaded={settings.media.logoForLightBg} />
+        </Link>
+        <nav aria-label="Main" className="hidden lg:block">
+          <ul className="flex items-center gap-1">
+            {items.map((item) => (
+              <li key={item.id}>
+                <NavLink item={item} />
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="ml-auto flex items-center gap-2">
+          <Button asChild className="hidden sm:inline-flex">
+            <Link href="/start-a-project">Start a project</Link>
+          </Button>
+          <MobileNav items={items} settings={settings} />
+        </div>
+      </div>
+    </HeaderShell>
+  );
+}
