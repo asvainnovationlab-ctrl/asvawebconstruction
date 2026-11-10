@@ -95,7 +95,7 @@ export function SiteFooter({ settings, navigation, services }: { settings: Publi
 
         <div className="flex flex-col gap-3 border-t py-6 text-[13px] text-muted-ink sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {footer.copyrightName}
+            © {year} {footer.copyrightName} · Company Regd. No. 398769/83/84
             {general.city ? ` · ${general.city}, ${general.country}` : ''}
           </p>
           <ul className="flex flex-wrap items-center gap-x-5 gap-y-1" aria-label="Legal">

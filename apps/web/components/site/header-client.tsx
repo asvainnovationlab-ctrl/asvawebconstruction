@@ -79,7 +79,7 @@ export function MobileNav({ items, settings }: { items: NavItem[]; settings: Pub
                     rel={item.openInNewTab ? 'noopener noreferrer' : undefined}
                     aria-current={active ? 'page' : undefined}
                     onClick={() => setOpen(false)}
-                    className={cn('block py-4 text-xl font-medium tracking-tight', active ? 'text-brand' : 'text-ink')}
+                    className={cn('block py-3 text-[15px] font-medium', active ? 'text-brand' : 'text-ink')}
                   >
                     {item.label}
                   </Link>

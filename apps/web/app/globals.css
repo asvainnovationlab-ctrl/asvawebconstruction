@@ -264,6 +264,12 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  /* A slow, continuous logo scroll has no flashing or vestibular impact, so it stays exempt.
+   * (The per-instance duration is set inline; this fallback only applies if that's absent.) */
+  .tech-marquee-track {
+    animation-duration: var(--marquee-duration, 20s) !important;
+    animation-iteration-count: infinite !important;
+  }
 }
 
 /* ------------------------------------------------------------------ Motion
@@ -315,6 +321,7 @@
 }
 .tech-marquee-track {
   animation: marquee linear infinite;
+  animation-duration: var(--marquee-duration, 20s);
 }
 .tech-marquee:hover .tech-marquee-track {
   animation-play-state: paused;

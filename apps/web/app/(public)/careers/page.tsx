@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { LABELS } from '@asva/shared';
 import { ApplicationForm } from '@/components/forms/application-form';
 import { PageHero, PhotoBanner, Section } from '@/components/site/blocks';
+import { Button } from '@/components/ui/button';
 import { SITE_IMAGES } from '@/lib/site-images';
 import { getJobs, getSettings } from '@/lib/api/public';
 import { buildMetadata } from '@/lib/seo';
@@ -29,17 +30,24 @@ export default async function CareersPage() {
           {jobs.length ? (
             <ul className="mt-6 divide-y border-y">
               {jobs.map((job) => (
-                <li key={job.id}>
-                  <Link href={`/careers/${job.slug}`} className="group grid gap-1 py-6 sm:grid-cols-12 sm:gap-6">
-                    <div className="sm:col-span-6">
-                      <h3 className="text-lg font-medium text-ink transition-colors group-hover:text-brand">{job.title}</h3>
-                      <p className="mt-1 text-[15px] text-muted-ink">{job.summary}</p>
-                    </div>
-                    <p className="text-[14px] text-muted-ink sm:col-span-4">
-                      {[job.department, job.location, LABELS.employmentType[job.employmentType], LABELS.workplaceType[job.workplaceType]].join(' · ')}
-                    </p>
-                    <p className="text-[14px] text-muted-ink sm:col-span-2 sm:text-right">{job.deadline ? `Apply by ${formatDate(job.deadline)}` : 'Open'}</p>
-                  </Link>
+                <li key={job.id} className="group relative grid items-center gap-3 py-6 sm:grid-cols-12 sm:gap-6">
+                  <div className="sm:col-span-5">
+                    <h3 className="text-lg font-medium text-ink transition-colors group-hover:text-brand">
+                      <Link href={`/careers/${job.slug}`} className="after:absolute after:inset-0">
+                        {job.title}
+                      </Link>
+                    </h3>
+                    <p className="mt-1 text-[15px] text-muted-ink">{job.summary}</p>
+                  </div>
+                  <p className="text-[14px] text-muted-ink sm:col-span-4">
+                    {[job.department, job.location, LABELS.employmentType[job.employmentType], LABELS.workplaceType[job.workplaceType]].join(' · ')}
+                  </p>
+                  <p className="text-[14px] text-muted-ink sm:col-span-1">{job.deadline ? `Apply by ${formatDate(job.deadline)}` : 'Open'}</p>
+                  <div className="sm:col-span-2 sm:justify-self-end">
+                    <Button asChild size="sm" className="relative">
+                      <Link href={`/careers/${job.slug}`}>Apply</Link>
+                    </Button>
+                  </div>
                 </li>
               ))}
             </ul>

@@ -51,9 +51,6 @@ export default async function ServicePage({ params }: Props) {
           <Button asChild size="lg">
             <Link href={`/start-a-project?service=${encodeURIComponent(service.name)}`}>Discuss this service</Link>
           </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link href="/portfolio">See our work</Link>
-          </Button>
         </div>
       </PageHero>
 

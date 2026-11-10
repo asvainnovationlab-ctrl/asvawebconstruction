@@ -73,7 +73,7 @@ export function TechMarquee({ technologies }: { technologies: TechnologyRef[] })
 
   return (
     <div className="tech-marquee relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
-      <ul className="tech-marquee-track flex w-max gap-3" style={{ animationDuration: `${duration}s` }} aria-hidden>
+      <ul className="tech-marquee-track flex w-max gap-3" style={{ '--marquee-duration': `${duration}s` } as React.CSSProperties} aria-hidden>
         {loop.map((t, i) => {
           const brand = BRAND_ICONS[t.slug];
           const CategoryIcon = CATEGORY_ICON[(t.category as TechnologyCategory) ?? 'OTHER'] ?? Boxes;
