@@ -7,6 +7,8 @@ dist/
 out/
 *.tsbuildinfo
 next-env.d.ts
+.open-next/
+.wrangler/
 
 # generated
 apps/api/src/generated/
