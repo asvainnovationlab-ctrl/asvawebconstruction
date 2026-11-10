@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { getService, getSettings } from '@/lib/api/public';
 import { notFoundOrRedirect } from '@/lib/not-found';
 import { buildMetadata } from '@/lib/seo';
+import { serviceImage } from '@/lib/site-images';
 import { absoluteUrl } from '@/lib/utils';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: service.seoTitle ?? service.name,
     description: service.seoDescription ?? service.shortDescription,
     path: `/services/${service.slug}`,
-    image: service.coverImage?.url,
+    image: service.coverImage?.url ?? serviceImage(service).src,
   });
 }
 
@@ -28,6 +29,9 @@ export default async function ServicePage({ params }: Props) {
   const [service, settings] = await Promise.all([getService(slug), getSettings()]);
   if (!service) return notFoundOrRedirect(`/services/${slug}`);
   const steps = settings.home.process.enabled ? settings.home.process.steps : [];
+  const fallbackImage = serviceImage(service);
+  const coverSrc = service.coverImage?.url ?? fallbackImage.src;
+  const coverAlt = service.coverImage?.alt || fallbackImage.alt;
 
   return (
     <>
@@ -56,9 +60,9 @@ export default async function ServicePage({ params }: Props) {
       <Section>
         <div className="container-page grid gap-14 lg:grid-cols-12 lg:gap-10">
           <article className="lg:col-span-7">
-            {service.coverImage && (
-              <Image src={service.coverImage.url} alt={service.coverImage.alt || service.name} width={service.coverImage.width ?? 1200} height={service.coverImage.height ?? 675} className="mb-10 w-full rounded-lg border object-cover" priority sizes="(min-width: 1024px) 58vw, 100vw" />
-            )}
+            <div className="relative mb-10 aspect-[16/9] w-full overflow-hidden rounded-lg border">
+              <Image src={coverSrc} alt={coverAlt} fill className="object-cover" priority sizes="(min-width: 1024px) 58vw, 100vw" />
+            </div>
             <RichText html={service.description} />
           </article>
           <aside className="space-y-10 lg:col-span-4 lg:col-start-9">

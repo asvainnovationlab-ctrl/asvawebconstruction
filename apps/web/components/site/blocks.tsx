@@ -16,7 +16,7 @@ export function Section({ className, children, tone = 'white', id, labelledBy }:
     <section
       id={id}
       aria-labelledby={labelledBy}
-      className={cn('py-16 sm:py-20 lg:py-28', (tone === 'muted' || tone === 'light') && 'bg-surface', tone === 'white' && 'bg-white', tone === 'dark' && 'bg-dark text-neutral-300', className)}
+      className={cn('py-16 sm:py-20 lg:py-28', (tone === 'muted' || tone === 'light') && 'bg-surface', tone === 'white' && 'bg-white', tone === 'dark' && 'bg-dark text-mist', className)}
     >
       {children}
     </section>
@@ -45,7 +45,7 @@ export function PhotoBanner({ src, alt, className }: { src: string; alt: string;
 }
 
 export function Eyebrow({ children, dark = false, className }: { children: React.ReactNode; dark?: boolean; className?: string }) {
-  return <p className={cn('type-label', dark && 'text-neutral-400', className)}>{children}</p>;
+  return <p className={cn('type-label font-semibold', dark ? '!text-mist' : '!text-brand', className)}>{children}</p>;
 }
 
 /** Left-aligned section heading with an optional supporting paragraph and trailing action. */
@@ -74,7 +74,7 @@ export function SectionHeading({
         <h2 id={id} className={cn('type-section', eyebrow && 'mt-3', dark ? 'text-white' : 'text-ink')}>
           {title}
         </h2>
-        {description && <p className={cn('mt-4 max-w-xl text-base leading-relaxed sm:text-[17px]', dark ? 'text-neutral-400' : 'text-muted-ink')}>{description}</p>}
+        {description && <p className={cn('mt-4 max-w-xl text-base leading-relaxed sm:text-[17px]', dark ? 'text-mist' : 'text-muted-ink')}>{description}</p>}
       </div>
       {action}
     </div>
@@ -141,7 +141,7 @@ export function RichText({ html, className }: { html: string; className?: string
 
 export function EmptyState({ title, description, action, dark = false }: { title: string; description: string; action?: React.ReactNode; dark?: boolean }) {
   return (
-    <div className={cn('border-y py-14', dark ? 'border-white/15 text-neutral-400' : 'text-muted-ink')}>
+    <div className={cn('border-y py-14', dark ? 'border-white/15 text-mist' : 'text-muted-ink')}>
       <p className={cn('text-lg font-medium', dark ? 'text-white' : 'text-ink')}>{title}</p>
       <p className="mt-2 max-w-md text-[15px]">{description}</p>
       {action && <div className="mt-6">{action}</div>}

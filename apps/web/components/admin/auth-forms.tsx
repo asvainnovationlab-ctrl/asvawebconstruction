@@ -38,8 +38,8 @@ export function LoginForm() {
 
   return (
     <>
-      <h1 className="text-xl font-semibold">Sign in to the CMS</h1>
-      <p className="mt-1 text-sm text-muted-foreground">Use your Asva Innovation Lab admin account.</p>
+      <h1 className="text-center text-xl font-semibold">Sign in to the CMS</h1>
+      <p className="mt-1 text-center text-sm text-muted-foreground">Use your Asva Innovation Lab admin account.</p>
       <form onSubmit={onSubmit} noValidate className="mt-6 space-y-4">
         <Field id="login-email" label="Email" error={formState.errors.email?.message}>
           <Input type="email" autoComplete="username" autoFocus {...register('email')} />
@@ -76,8 +76,8 @@ export function ForgotPasswordForm() {
   });
   return (
     <>
-      <h1 className="text-xl font-semibold">Reset your password</h1>
-      <p className="mt-1 text-sm text-muted-foreground">We will email you a single-use link that expires in 30 minutes.</p>
+      <h1 className="text-center text-xl font-semibold">Reset your password</h1>
+      <p className="mt-1 text-center text-sm text-muted-foreground">We will email you a single-use link that expires in 30 minutes.</p>
       {message ? (
         <Alert variant="success" className="mt-6">
           {message}
@@ -124,8 +124,8 @@ export function SetPasswordForm({ mode }: { mode: 'reset' | 'invite' }) {
   if (!token) return <Alert variant="error">This link is missing its token. Please use the full link from your email.</Alert>;
   return (
     <>
-      <h1 className="text-xl font-semibold">{mode === 'invite' ? 'Set up your account' : 'Choose a new password'}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">Use at least 12 characters with a mix of letters, numbers and symbols.</p>
+      <h1 className="text-center text-xl font-semibold">{mode === 'invite' ? 'Set up your account' : 'Choose a new password'}</h1>
+      <p className="mt-1 text-center text-sm text-muted-foreground">Use at least 12 characters with a mix of letters, numbers and symbols.</p>
       {done ? (
         <div className="mt-6 space-y-4">
           <Alert variant="success">{done}</Alert>

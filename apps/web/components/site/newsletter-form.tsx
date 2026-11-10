@@ -70,7 +70,7 @@ export function NewsletterForm({ dark = true }: { dark?: boolean }) {
           Subscribe
         </Button>
       </div>
-      <label className={cn('flex items-start gap-2 text-xs', dark ? 'text-neutral-400' : 'text-muted-ink')}>
+      <label className={cn('flex items-start gap-2 text-xs', dark ? 'text-mist' : 'text-muted-ink')}>
         <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 size-3.5 accent-[var(--accent)]" />
         <span>
           I agree to receive occasional emails and accept the{' '}

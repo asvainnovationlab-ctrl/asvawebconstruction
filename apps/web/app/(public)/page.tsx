@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { LABELS, type TechnologyCategory } from '@asva/shared';
 import { PostRow, ProjectCard, ServiceRow } from '@/components/site/cards';
+import { TechMarquee } from '@/components/site/tech-marquee';
 import { BackdropImage, Eyebrow, Section, SectionHeading, TextLink } from '@/components/site/blocks';
 import { SITE_IMAGES } from '@/lib/site-images';
 import { Reveal } from '@/components/site/reveal';
@@ -27,12 +27,6 @@ export default async function HomePage() {
     getPosts({ pageSize: 4 }),
   ]);
   const { home } = settings;
-  const techByCategory = Object.entries(
-    technologies.reduce<Record<string, typeof technologies>>((acc, t) => {
-      (acc[t.category ?? 'OTHER'] ??= []).push(t);
-      return acc;
-    }, {}),
-  );
   const [lead, second, third] = featured.data;
 
   return (
@@ -42,7 +36,7 @@ export default async function HomePage() {
         <div className="container-page grid items-center gap-14 pb-16 pt-12 sm:pt-16 lg:grid-cols-12 lg:gap-10 lg:pb-28 lg:pt-24">
           <div className="lg:col-span-7">
             {home.hero.eyebrow && (
-              <p className="hero-in text-[13px] font-medium tracking-[0.06em] text-muted-ink" style={enter(0)}>
+              <p className="hero-in text-[13px] font-semibold tracking-[0.06em] text-brand" style={enter(0)}>
                 {home.hero.eyebrow}
               </p>
             )}
@@ -55,9 +49,6 @@ export default async function HomePage() {
             <div className="hero-in mt-9 flex flex-col gap-3 sm:flex-row" style={enter(290)}>
               <Button asChild size="lg">
                 <Link href={home.hero.primaryCta.href}>{home.hero.primaryCta.label}</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href={home.hero.secondaryCta.href}>{home.hero.secondaryCta.label}</Link>
               </Button>
             </div>
           </div>
@@ -169,8 +160,8 @@ export default async function HomePage() {
               {home.process.steps.map((step, i) => (
                 <li key={step.title}>
                   <Reveal delay={i * 90}>
-                    <span className="reveal-line block h-px bg-ink" aria-hidden />
-                    <span className="mt-4 block font-mono text-[12px] text-muted-ink">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="reveal-line block h-0.5 bg-brand" aria-hidden />
+                    <span className="mt-4 block font-mono text-[12px] font-semibold text-brand">{String(i + 1).padStart(2, '0')}</span>
                     <h3 className="mt-3 text-[15px] font-medium leading-snug text-ink">{step.title}</h3>
                     <p className="mt-2 text-[14px] leading-relaxed text-muted-ink">{step.description}</p>
                   </Reveal>
@@ -181,25 +172,19 @@ export default async function HomePage() {
         </Section>
       )}
 
-      {/* ------------------------------------------------------------------ Technologies (plain text) */}
+      {/* ------------------------------------------------------------------ Technologies (auto-scrolling strip) */}
       {home.technologies.enabled && technologies.length > 0 && (
         <Section tone="muted" labelledBy="tech-title">
-          <div className="container-page grid gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-4">
+          <div className="container-page">
+            <div className="max-w-sm">
               <h2 id="tech-title" className="type-section text-ink">
                 {home.technologies.heading}
               </h2>
-              {home.technologies.subheading && <p className="mt-4 max-w-sm text-[17px] leading-relaxed text-muted-ink">{home.technologies.subheading}</p>}
+              {home.technologies.subheading && <p className="mt-4 text-[17px] leading-relaxed text-muted-ink">{home.technologies.subheading}</p>}
             </div>
-            <dl className="lg:col-span-8">
-              {techByCategory.map(([category, items], i) => (
-                <Reveal key={category} delay={i * 50} className="grid gap-1 border-t py-4 sm:grid-cols-4 sm:gap-6">
-                  <dt className="text-[14px] text-muted-ink">{LABELS.technologyCategory[category as TechnologyCategory] ?? category}</dt>
-                  <dd className="text-[15px] text-ink sm:col-span-3">{items.map((t) => t.name).join('  ·  ')}</dd>
-                </Reveal>
-              ))}
-              <div className="border-t" />
-            </dl>
+            <Reveal className="mt-10 -mx-5 sm:-mx-8 xl:-mx-10">
+              <TechMarquee technologies={technologies} />
+            </Reveal>
           </div>
         </Section>
       )}
@@ -252,7 +237,7 @@ export default async function HomePage() {
             <h2 id="cta-title" className="type-section max-w-2xl text-white">
               {home.cta.heading}
             </h2>
-            <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-neutral-400">{home.cta.body}</p>
+            <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-mist">{home.cta.body}</p>
           </Reveal>
           <Reveal delay={140} className="lg:col-span-4 lg:justify-self-end">
             <Button asChild size="lg">

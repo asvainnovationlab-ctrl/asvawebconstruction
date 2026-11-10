@@ -128,7 +128,7 @@ export function Pagination({ page, totalPages, hrefFor }: { page: number; totalP
       {pages.map((p, i) => (
         <span key={p} className="flex items-center">
           {i > 0 && pages[i - 1] !== p - 1 && <span className="px-2 text-neutral-400">…</span>}
-          <Link href={hrefFor(p)} aria-current={p === page ? 'page' : undefined} className={cn('grid size-9 place-items-center rounded-md font-medium', p === page ? 'bg-ink text-white' : 'text-ink hover:bg-neutral-100')}>
+          <Link href={hrefFor(p)} aria-current={p === page ? 'page' : undefined} className={cn('grid size-9 place-items-center rounded-md font-medium', p === page ? 'bg-brand text-white' : 'text-ink hover:bg-neutral-100')}>
             {p}
           </Link>
         </span>

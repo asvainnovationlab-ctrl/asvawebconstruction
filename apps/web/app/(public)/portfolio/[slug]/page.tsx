@@ -148,7 +148,7 @@ export default async function ProjectPage({ params }: Props) {
         <div className="container-page grid items-end gap-6 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <h2 className="type-section text-white">Planning something similar?</h2>
-            <p className="mt-4 max-w-xl text-[17px] text-neutral-400">Tell us about your goals and how we can help.</p>
+            <p className="mt-4 max-w-xl text-[17px] text-mist">Tell us about your goals and how we can help.</p>
           </div>
           <div className="lg:col-span-4 lg:justify-self-end">
             <Button asChild size="lg">

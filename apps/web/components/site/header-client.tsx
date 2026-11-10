@@ -38,8 +38,8 @@ export function NavLink({ item }: { item: NavItem }) {
       rel={item.openInNewTab ? 'noopener noreferrer' : undefined}
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'relative rounded-md px-3 py-2 text-[14px] font-medium transition-colors after:absolute after:inset-x-3 after:bottom-1 after:h-px after:origin-left after:bg-ink after:transition-transform after:duration-300',
-        active ? 'text-ink after:scale-x-100' : 'text-neutral-500 after:scale-x-0 hover:text-ink hover:after:scale-x-100',
+        'relative rounded-md px-3 py-2 text-[14px] font-medium transition-colors after:absolute after:inset-x-3 after:bottom-1 after:h-px after:origin-left after:bg-brand after:transition-transform after:duration-300',
+        active ? 'text-brand after:scale-x-100' : 'text-neutral-500 after:scale-x-0 hover:text-ink hover:after:scale-x-100',
       )}
     >
       {item.label}

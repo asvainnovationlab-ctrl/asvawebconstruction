@@ -7,11 +7,11 @@ import { HeaderShell, MobileNav, NavLink } from './header-client';
 export function SiteHeader({ items, settings }: { items: NavItem[]; settings: PublicSettings }) {
   return (
     <HeaderShell>
-      <div className="container-page flex h-16 items-center gap-8">
+      <div className="container-page relative flex h-16 items-center gap-8">
         <Link href="/" className="shrink-0 rounded-sm" aria-label={`${settings.general.shortName} — home`}>
           <Logo tone="dark" variant="full" className="h-9" uploaded={settings.media.logoForLightBg} />
         </Link>
-        <nav aria-label="Main" className="hidden lg:block">
+        <nav aria-label="Main" className="hidden lg:absolute lg:left-1/2 lg:block lg:-translate-x-1/2">
           <ul className="flex items-center gap-1">
             {items.map((item) => (
               <li key={item.id}>

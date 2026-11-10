@@ -22,7 +22,7 @@ export default async function CareersPage() {
   return (
     <>
       <PageHero title="Careers" description={careers.intro} crumbs={[{ name: 'Careers', path: '/careers' }]} />
-      <PhotoBanner src={SITE_IMAGES.teamReview.src} alt={SITE_IMAGES.teamReview.alt} />
+      <PhotoBanner src={SITE_IMAGES.teamCareers.src} alt={SITE_IMAGES.teamCareers.alt} />
       <Section>
         <div className="container-page">
           <h2 className="text-xl font-semibold">Open positions</h2>

@@ -197,6 +197,7 @@ export const LEGAL_PAGES = [
 
 export const DEFAULT_NAVIGATION = {
   HEADER: [
+    { label: 'Home', href: '/' },
     { label: 'About', href: '/about' },
     { label: 'Services', href: '/services' },
     { label: 'Portfolio', href: '/portfolio' },

@@ -44,7 +44,7 @@ export default async function ServicesPage() {
         <div className="container-page relative grid items-end gap-6 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <h2 className="type-section text-white">Not sure which service fits?</h2>
-            <p className="mt-4 max-w-xl text-[17px] text-neutral-400">Describe the problem you are solving and we will recommend an approach.</p>
+            <p className="mt-4 max-w-xl text-[17px] text-mist">Describe the problem you are solving and we will recommend an approach.</p>
           </div>
           <div className="lg:col-span-4 lg:justify-self-end">
             <Button asChild size="lg">

@@ -127,7 +127,7 @@ export default async function AboutPage() {
         <div className="container-page relative grid items-end gap-6 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <h2 className="type-section text-white">Let’s talk about your project</h2>
-            <p className="mt-4 max-w-xl text-[17px] text-neutral-400">Tell us where you want to get to. We will help you decide how.</p>
+            <p className="mt-4 max-w-xl text-[17px] text-mist">Tell us where you want to get to. We will help you decide how.</p>
           </div>
           <div className="flex gap-3 lg:col-span-4 lg:justify-self-end">
             <Button asChild size="lg">

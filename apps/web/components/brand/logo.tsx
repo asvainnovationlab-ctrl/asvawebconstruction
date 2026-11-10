@@ -3,14 +3,31 @@ import type { Media } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 /**
- * Vector paths traced from the supplied Asva Innovation Lab logo. Uploaded logo files in
+ * Vector paths from the Asva Innovation Lab logo pack: a mountain-peak symbol (navy or white body,
+ * Himalayan Snow cap, Electric/Bright Blue flag) plus the "ASVA" wordmark. Uploaded logo files in
  * Admin → Settings → Branding take precedence over this built-in version.
  */
-const A_LEFT = '217,515 310,379 363,379 452,515 405,515 336,411 304,459 347,460 364,486 285,486 265,515';
-const S_PATH =
-  'M632,379 H535 C495,379 476,388 472,410 C469,425 469,440 474,448 C482,458 498,463 520,463 H590 C602,463 607,467 607,474 C607,482 600,486 588,486 H474 V515 H600 C635,515 648,503 650,485 C652,470 651,455 647,447 C640,438 625,433 598,433 H527 C518,433 514,428 514,421 C514,414 520,409 529,409 H632 Z';
-const V = '649,379 697,379 769,482 831,379 878,379 793,515 746,515';
-const A_RIGHT = '843,515 931,379 979,379 1062,515 1017,515 954,411 924,459 963,459 979,486 905,486 888,515';
+const MOUNTAIN = '279,712 622,252 957,712 828,712 622,428 407,712';
+const SNOW_CAP = '622,252 678.8,330 650,312 622,342 594,312 563.8,330';
+const FLAG = '694,248 1270,248 968,672 901,580 1068,343 760,343';
+
+const WORDMARK_A_LEFT = 'M280 663 L400 488 L468 488 L583 663 L522 663 L434 530 L343 663 Z';
+const WORDMARK_A_BAR = 'M392 592 L448 592 L470 626 L368 626 Z';
+const WORDMARK_S = 'M815 488 H668 C625 488 610 505 610 530 V550 C610 580 630 597 668 597 H762 C776 597 782 603 782 611 C782 620 776 626 762 626 H610 V663 H778 C822 663 838 645 838 620 V600 C838 570 820 557 780 557 H672 C664 557 661 554 661 546 V540 C661 532 664 527 672 527 H815 Z';
+const WORDMARK_V = 'M836 488 L902 488 L990 620 L1073 488 L1132 488 L1024 663 L962 663 Z';
+
+function Wordmark({ fill }: { fill: string }) {
+  return (
+    <g fill={fill}>
+      <path d={WORDMARK_A_LEFT} />
+      <path d={WORDMARK_A_BAR} />
+      <path d={WORDMARK_S} />
+      <path d={WORDMARK_V} />
+      <path transform="translate(807 0)" d={WORDMARK_A_LEFT} />
+      <path transform="translate(807 0)" d={WORDMARK_A_BAR} />
+    </g>
+  );
+}
 
 interface LogoProps {
   /** `light` = white logo for dark backgrounds; `dark` = navy logo for light backgrounds. */
@@ -34,32 +51,35 @@ export function Logo({ tone = 'dark', variant = 'full', className, uploaded }: L
       />
     );
   }
-  const fill = tone === 'light' ? '#FFFFFF' : '#0B1020';
+  const mountainFill = tone === 'light' ? '#FFFFFF' : '#0B1736';
+  const flagFill = tone === 'light' ? '#3D7BFF' : '#2F6BFF';
+  const wordmarkFill = tone === 'light' ? '#FFFFFF' : '#0B1736';
+
   if (variant === 'icon') {
     return (
-      <svg viewBox="184.5 297 300 300" className={cn('h-9 w-9', className)} role="img" aria-label="Asva Innovation Lab">
-        <polygon points={A_LEFT} fill={fill} />
+      <svg viewBox="0 0 240 240" className={cn('h-9 w-9', className)} role="img" aria-label="Asva Innovation Lab">
+        <g transform="translate(120 122) scale(0.18) translate(-774.5 -480)">
+          <polygon points={MOUNTAIN} fill={mountainFill} />
+          <polygon points={SNOW_CAP} fill="#7FB0FF" />
+          <polygon points={FLAG} fill={flagFill} />
+        </g>
       </svg>
     );
   }
-  const full = variant === 'full';
+  if (variant === 'wordmark') {
+    return (
+      <svg viewBox="240 448 1190 255" className={cn('h-7 w-auto', className)} role="img" aria-label="Asva Innovation Lab">
+        <Wordmark fill={wordmarkFill} />
+      </svg>
+    );
+  }
   return (
-    <svg
-      viewBox={full ? '205 365 870 210' : '205 365 870 165'}
-      className={cn(full ? 'h-10 w-auto' : 'h-7 w-auto', className)}
-      role="img"
-      aria-label="Asva Innovation Lab Private Limited"
-    >
-      <g fill={fill}>
-        <polygon points={A_LEFT} />
-        <path d={S_PATH} />
-        <polygon points={V} />
-        <polygon points={A_RIGHT} />
-        {full && (
-          <text x="219" y="562" textLength="843" lengthAdjust="spacingAndGlyphs" fontFamily="var(--font-inter), Inter, Arial, sans-serif" fontSize="43" fontWeight="500">
-            INNOVATION LAB PRIVATE LIMITED
-          </text>
-        )}
+    <svg viewBox="239 208 2513 544" className={cn('h-10 w-auto', className)} role="img" aria-label="Asva Innovation Lab">
+      <polygon points={MOUNTAIN} fill={mountainFill} />
+      <polygon points={SNOW_CAP} fill="#7FB0FF" />
+      <polygon points={FLAG} fill={flagFill} />
+      <g transform="translate(1380 375) scale(1.2) translate(-280 -488)">
+        <Wordmark fill={wordmarkFill} />
       </g>
     </svg>
   );
