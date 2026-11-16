@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { PostRow, ProjectCard, ServiceRow } from '@/components/site/cards';
 import { TechMarquee } from '@/components/site/tech-marquee';
@@ -53,19 +52,11 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="hero-in lg:col-span-5" style={enter(380)}>
-            {settings.media.heroImage ? (
-              <Image
-                src={settings.media.heroImage.url}
-                alt={settings.media.heroImage.alt}
-                width={settings.media.heroImage.width ?? 1200}
-                height={settings.media.heroImage.height ?? 900}
-                priority
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                className="w-full rounded-lg border"
-              />
-            ) : (
-              <HeroVisual services={services} />
-            )}
+            <HeroVisual
+              services={services}
+              image={settings.media.heroImage ? { src: settings.media.heroImage.url, alt: settings.media.heroImage.alt } : null}
+              location={[settings.general.city, settings.general.country].filter(Boolean).join(', ')}
+            />
           </div>
         </div>
       </section>

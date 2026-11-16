@@ -29,10 +29,14 @@ function readAltOverrides(): Record<string, string> {
 
 const ALT_OVERRIDES = readAltOverrides();
 
-/** Uses `public/images/company/<name>.<ext>` when present, otherwise the stock photo. */
-function photo(slot: string, file: string, alt: string): { src: string; alt: string } {
+/**
+ * Uses `public/images/company/<name>.<ext>` when present, otherwise the stock photo.
+ * `stockFile` lets a slot fall back to a differently named stock photo when the company
+ * folder has no file of its own (used by slots that only exist as company photography).
+ */
+function photo(slot: string, file: string, alt: string, stockFile = file): { src: string; alt: string } {
   const base = file.replace(/\.[^.]+$/, '');
-  let src = `/images/${file}`;
+  let src = `/images/${stockFile}`;
   try {
     for (const ext of EXTENSIONS) {
       if (existsSync(path.join(COMPANY_DIR, `${base}${ext}`))) {
@@ -47,6 +51,13 @@ function photo(slot: string, file: string, alt: string): { src: string; alt: str
 }
 
 export const SITE_IMAGES = {
+  /** Home page hero. Landscape — replace with `company/home-hero.jpg`; falls back to the stock team photo. */
+  homeHero: photo(
+    'homeHero',
+    'home-hero.jpg',
+    'A whiteboard at Asva Innovation Lab headed “ASVA Innovation Lab Pvt Ltd.”, with the team’s approach written as JavaScript: a developer object whose mindset is “Never Give Up”, passion is “Coding” and goal is “Build The Future”, working in a loop of learn, code, innovate and improve.',
+    'team-collab.jpg',
+  ),
   teamCollab: photo('teamCollab', 'team-collab.jpg', 'A software team working together on laptops around a table'),
   teamReview: photo('teamReview', 'team-review.jpg', 'Two colleagues reviewing code together at a desk'),
   workspace: photo('workspace', 'workspace.jpg', 'Overhead view of a team workspace with laptops and phones'),

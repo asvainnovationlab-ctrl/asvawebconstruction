@@ -19,10 +19,11 @@ Any of these extensions work: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`
 
 | File name to use | Where it appears |
 | --- | --- |
+| `home-hero.jpg` | **Home page hero** — the photo beside the headline, shown whole |
 | `workspace.jpg` | About page — wide banner under the heading |
 | `team-collab.jpg` | About page — "Let's talk about your project" background |
 | `team-careers.jpg` | Careers page |
-| `team-review.jpg` | Home page, and services about testing / QA |
+| `team-review.jpg` | Services about testing / QA |
 | `web-dev.jpg` | Generic web & software services |
 | `website-design.jpg` | Website design services |
 | `web-app-dev.jpg` | Web application services |
@@ -38,6 +39,10 @@ Any of these extensions work: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`
 
 ## Recommended sizes
 
+- **Home hero** (`home-hero`): landscape, about **1360 x 1100 px**. It is displayed whole inside a card
+  with a navy title bar — nothing is cropped away and nothing is laid over it — so fine detail stays
+  readable. Keep it bright and uncluttered. The photo in this folder is the studio whiteboard,
+  perspective-corrected and lighting-flattened so it reads as a clean white surface with crisp ink.
 - **Banners** (`workspace`, `team-collab`, `team-careers`): about **2000 x 1125 px** (16:9), landscape
 - **Service photos**: about **1200 x 900 px** (4:3), landscape
 - Keep each file **under ~500 KB**. Export as JPEG at ~80% quality, or use `.webp`
@@ -61,7 +66,7 @@ replaced:
 
 Use the **slot name** as the key (left column below), not the file name:
 
-`workspace`, `teamCollab`, `teamCareers`, `teamReview`, `webDev`, `webDesign`,
+`homeHero`, `workspace`, `teamCollab`, `teamCareers`, `teamReview`, `webDev`, `webDesign`,
 `webApp`, `customSoftware`, `mobileApp`, `uiux`, `ecommerce`, `integration`,
 `cloud`, `analytics`, `ai`, `enterprise`
 
