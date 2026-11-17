@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { PostRow, ProjectCard, ServiceRow } from '@/components/site/cards';
+import { ServiceFeature } from '@/components/site/cards';
 import { TechMarquee } from '@/components/site/tech-marquee';
 import { BackdropImage, Eyebrow, Section, SectionHeading, TextLink } from '@/components/site/blocks';
 import { SITE_IMAGES } from '@/lib/site-images';
 import { Reveal } from '@/components/site/reveal';
 import { HeroVisual } from '@/components/site/hero-visual';
 import { Button } from '@/components/ui/button';
-import { getPosts, getProjects, getServices, getSettings, getTechnologies, getTestimonials } from '@/lib/api/public';
+import { getServices, getSettings, getTechnologies, getTestimonials } from '@/lib/api/public';
 import { buildMetadata } from '@/lib/seo';
 
 const enter = (ms: number) => ({ '--d': `${ms}ms` }) as React.CSSProperties;
@@ -17,16 +17,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [settings, services, featured, technologies, testimonials, posts] = await Promise.all([
-    getSettings(),
-    getServices(),
-    getProjects({ featured: 'true', pageSize: 3 }),
-    getTechnologies(),
-    getTestimonials(),
-    getPosts({ pageSize: 4 }),
-  ]);
+  const [settings, services, technologies, testimonials] = await Promise.all([getSettings(), getServices(), getTechnologies(), getTestimonials()]);
   const { home } = settings;
-  const [lead, second, third] = featured.data;
 
   return (
     <>
@@ -90,54 +82,25 @@ export default async function HomePage() {
         )}
       </Section>
 
-      {/* ------------------------------------------------------------------ Services (rows) */}
+      {/* ------------------------------------------------------------------ Services (alternating photo / description) */}
       {services.length > 0 && (
         <Section labelledBy="services-title">
-          <div className="container-page grid gap-10 lg:grid-cols-12 lg:gap-10">
-            <div className="lg:col-span-4">
-              <div className="lg:sticky lg:top-28">
-                <h2 id="services-title" className="type-section text-ink">
-                  {home.services.heading}
-                </h2>
-                {home.services.subheading && <p className="mt-4 max-w-sm text-[17px] leading-relaxed text-muted-ink">{home.services.subheading}</p>}
-                <div className="mt-6">
-                  <TextLink href="/services">All services</TextLink>
-                </div>
-              </div>
-            </div>
-            <ul className="divide-y border-y lg:col-span-8">
-              {services.slice(0, home.services.limit).map((service, i) => (
-                <li key={service.id}>
-                  <Reveal delay={i * 60}>
-                    <ServiceRow service={service} index={i} />
-                  </Reveal>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Section>
-      )}
-
-      {/* ------------------------------------------------------------------ Selected work (editorial grid) */}
-      {home.projects.enabled && lead && (
-        <Section tone="muted" labelledBy="work-title">
           <div className="container-page">
-            <SectionHeading id="work-title" title={home.projects.heading} description={home.projects.subheading} action={<TextLink href="/portfolio">All work</TextLink>} />
-            <div className="mt-12 grid gap-x-8 gap-y-14 lg:grid-cols-12">
-              <Reveal className="lg:col-span-7">
-                <ProjectCard project={lead} size="lg" priority />
-              </Reveal>
-              {second && (
-                <Reveal delay={120} className="lg:col-span-5 lg:mt-24">
-                  <ProjectCard project={second} />
+            <SectionHeading id="services-title" title={home.services.heading} description={home.services.subheading} />
+            <div className="mt-14 space-y-16 lg:mt-16 lg:space-y-24">
+              {services.slice(0, home.services.limit).map((service, i) => (
+                <Reveal key={service.id}>
+                  <ServiceFeature service={service} index={i} />
                 </Reveal>
-              )}
-              {third && (
-                <Reveal delay={60} className="lg:col-span-5">
-                  <ProjectCard project={third} />
-                </Reveal>
-              )}
+              ))}
             </div>
+            {services.length > home.services.limit && (
+              <Reveal className="mt-14 flex justify-center lg:mt-16">
+                <Button asChild size="lg" variant="outline">
+                  <Link href="/services">View all {services.length} services</Link>
+                </Button>
+              </Reveal>
+            )}
           </div>
         </Section>
       )}
@@ -195,24 +158,6 @@ export default async function HomePage() {
                       <span className="text-muted-ink">{[t.designation, t.company].filter(Boolean).length ? `, ${[t.designation, t.company].filter(Boolean).join(', ')}` : ''}</span>
                     </figcaption>
                   </figure>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Section>
-      )}
-
-      {/* ------------------------------------------------------------------ Insights (list) */}
-      {home.insights.enabled && posts.data.length > 0 && (
-        <Section labelledBy="insights-title" className={testimonials.length === 0 && !(home.technologies.enabled && technologies.length) ? '' : 'border-t'}>
-          <div className="container-page">
-            <SectionHeading id="insights-title" title={home.insights.heading} description={home.insights.subheading} action={<TextLink href="/blog">All articles</TextLink>} />
-            <ul className="mt-10 divide-y border-y">
-              {posts.data.map((post, i) => (
-                <li key={post.id}>
-                  <Reveal delay={i * 70}>
-                    <PostRow post={post} />
-                  </Reveal>
                 </li>
               ))}
             </ul>

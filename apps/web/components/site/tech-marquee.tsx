@@ -69,7 +69,8 @@ const BRAND_ICONS: Record<string, SimpleIcon> = {
 export function TechMarquee({ technologies }: { technologies: TechnologyRef[] }) {
   if (technologies.length === 0) return null;
   const loop = [...technologies, ...technologies];
-  const duration = Math.max(technologies.length * 3.5, 18);
+  // ~2s of travel per logo keeps the strip visibly moving without being distracting.
+  const duration = Math.max(technologies.length * 2, 14);
 
   return (
     <div className="tech-marquee relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">

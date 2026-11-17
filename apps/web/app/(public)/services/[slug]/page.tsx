@@ -32,6 +32,7 @@ export default async function ServicePage({ params }: Props) {
   const fallbackImage = serviceImage(service);
   const coverSrc = service.coverImage?.url ?? fallbackImage.src;
   const coverAlt = service.coverImage?.alt || fallbackImage.alt;
+  const coverPosition = service.coverImage ? undefined : fallbackImage.position;
 
   return (
     <>
@@ -58,7 +59,7 @@ export default async function ServicePage({ params }: Props) {
         <div className="container-page grid gap-14 lg:grid-cols-12 lg:gap-10">
           <article className="lg:col-span-7">
             <div className="relative mb-10 aspect-[16/9] w-full overflow-hidden rounded-lg border">
-              <Image src={coverSrc} alt={coverAlt} fill className="object-cover" priority sizes="(min-width: 1024px) 58vw, 100vw" />
+              <Image src={coverSrc} alt={coverAlt} fill style={coverPosition ? { objectPosition: coverPosition } : undefined} className="object-cover" priority sizes="(min-width: 1024px) 58vw, 100vw" />
             </div>
             <RichText html={service.description} />
           </article>

@@ -37,8 +37,16 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 export function Button({ className, variant, size, asChild = false, loading = false, children, disabled, ...props }: ButtonProps) {
   const Comp = asChild ? Slot.Root : 'button';
+  const off = disabled || loading;
   return (
-    <Comp className={cn(buttonVariants({ variant, size }), className)} disabled={disabled || loading} aria-busy={loading || undefined} {...props}>
+    <Comp
+      className={cn(buttonVariants({ variant, size }), asChild && off && 'pointer-events-none opacity-50', className)}
+      // `disabled` is not a valid attribute on the element a slotted child renders (usually <a>);
+      // links are taken out of the tab order and made inert with aria/CSS instead.
+      {...(asChild ? { 'aria-disabled': off || undefined, tabIndex: off ? -1 : undefined } : { disabled: off })}
+      aria-busy={loading || undefined}
+      {...props}
+    >
       {asChild ? (
         children
       ) : (

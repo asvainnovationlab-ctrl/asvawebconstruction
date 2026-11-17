@@ -5,7 +5,7 @@ import { DEFAULT_SETTINGS, type AuthUser } from '@asva/shared';
 import { Logo } from '@/components/brand/logo';
 import { AuthGate, RequirePermission } from '@/components/admin/auth';
 import { DataTable, StatusBadge } from '@/components/admin/ui';
-import { ProjectCard } from '@/components/site/cards';
+import { ProjectCard, ServiceFeature, ServiceRow } from '@/components/site/cards';
 import { MobileNav, NavLink } from '@/components/site/header-client';
 import type { PublicSettings } from '@/lib/types';
 
@@ -54,6 +54,50 @@ describe('Public content rendering', () => {
     expect(screen.getByText('Sample', { exact: true })).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', '/portfolio/demo');
     expect(screen.getByText(/Web.*React/)).toBeInTheDocument();
+  });
+
+  it('uses the company custom-software photo on both home feature and services row', () => {
+    const customService = {
+      name: 'Custom Software Development',
+      slug: 'custom-software-development',
+      shortDescription: 'Software designed around your processes.',
+      coverImage: null,
+    };
+
+    const { container, rerender } = render(<ServiceFeature service={customService} index={0} />);
+    let img = container.querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/custom-software.webp'));
+    expect(img).toHaveAttribute('alt', expect.stringMatching(/custom software/i));
+    expect(img).toHaveStyle({ objectPosition: '50% 63%' });
+
+    rerender(<ServiceRow service={customService} index={0} />);
+    img = container.querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/custom-software.webp'));
+    expect(img).toHaveAttribute('alt', expect.stringMatching(/custom software/i));
+    expect(img).toHaveStyle({ objectPosition: '50% 63%' });
+
+    const enterpriseService = {
+      name: 'Enterprise Software Solutions',
+      slug: 'enterprise-software-solutions',
+      shortDescription: 'Systems that streamline operations across departments.',
+      coverImage: null,
+    };
+
+    rerender(<ServiceFeature service={enterpriseService} index={1} />);
+    img = container.querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/enterprise.jpg'));
+    expect(img).toHaveAttribute('alt', expect.stringMatching(/enterprise software/i));
+    expect(img).toHaveStyle({ objectPosition: '50% 55%' });
+
+    rerender(<ServiceRow service={enterpriseService} index={1} />);
+    img = container.querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/enterprise.jpg'));
+    expect(img).toHaveAttribute('alt', expect.stringMatching(/enterprise software/i));
+    expect(img).toHaveStyle({ objectPosition: '50% 55%' });
   });
 });
 

@@ -29,25 +29,38 @@ function readAltOverrides(): Record<string, string> {
 
 const ALT_OVERRIDES = readAltOverrides();
 
+export interface SiteImage {
+  src: string;
+  alt: string;
+  /** Optional CSS `object-position` override when a photo needs non-center framing in landscape crops. */
+  position?: string;
+}
+
 /**
  * Uses `public/images/company/<name>.<ext>` when present, otherwise the stock photo.
  * `stockFile` lets a slot fall back to a differently named stock photo when the company
  * folder has no file of its own (used by slots that only exist as company photography).
  */
-function photo(slot: string, file: string, alt: string, stockFile = file): { src: string; alt: string } {
+function photo(slot: string, file: string, alt: string, stockFile = file, companyPosition?: string): SiteImage {
   const base = file.replace(/\.[^.]+$/, '');
   let src = `/images/${stockFile}`;
+  let isCompanyPhoto = false;
   try {
     for (const ext of EXTENSIONS) {
       if (existsSync(path.join(COMPANY_DIR, `${base}${ext}`))) {
         src = `/images/company/${base}${ext}`;
+        isCompanyPhoto = true;
         break;
       }
     }
   } catch {
     // Unreadable folder: keep the stock photo.
   }
-  return { src, alt: ALT_OVERRIDES[slot] ?? alt };
+  return {
+    src,
+    alt: ALT_OVERRIDES[slot] ?? alt,
+    ...(isCompanyPhoto && companyPosition ? { position: companyPosition } : {}),
+  };
 }
 
 export const SITE_IMAGES = {
@@ -60,23 +73,25 @@ export const SITE_IMAGES = {
   ),
   teamCollab: photo('teamCollab', 'team-collab.jpg', 'A software team working together on laptops around a table'),
   teamReview: photo('teamReview', 'team-review.jpg', 'Two colleagues reviewing code together at a desk'),
+  qaTesting: photo('qaTesting', 'qa-testing.webp', 'A quality assurance team at work in the Asva Innovation Lab office: one colleague on a phone call while two others work at their desks', 'team-review.jpg'),
   workspace: photo('workspace', 'workspace.jpg', 'Overhead view of a team workspace with laptops and phones'),
   webDev: photo('webDev', 'web-dev.jpg', 'Laptop showing source code on a developer’s desk'),
   webDesign: photo('webDesign', 'website-design.jpg', 'Desktop monitor displaying a website layout next to a code editor'),
-  customSoftware: photo('customSoftware', 'custom-software.jpg', 'A team planning a project around sticky notes on a whiteboard'),
-  webApp: photo('webApp', 'web-app-dev.jpg', 'A dual-monitor developer setup showing a web app’s code'),
+  // Keep head, headphones and laptops framed cleanly across 4:3, 16:10 and 16:9 containers.
+  /** Company photo is a portrait shot of a developer at a desk; framed slightly below centre so the face and laptop survive the landscape crop. */
+  customSoftware: photo('customSoftware', 'custom-software.jpg', 'A team planning a project around sticky notes on a whiteboard', 'custom-software.jpg', '50% 55%'),
+  webApp: photo('webApp', 'web-app-dev.jpg', 'A developer workstation at Asva Innovation Lab: a laptop open on application code beside an external monitor and a backlit mechanical keyboard'),
   mobileApp: photo('mobileApp', 'mobile-app.jpg', 'Smartphone showing a home screen of mobile apps'),
   analytics: photo('analytics', 'analytics.jpg', 'Analytics dashboard with charts on a laptop screen'),
   cloud: photo('cloud', 'cloud-network.jpg', 'Earth at night with glowing city lights connected across the globe'),
   ai: photo('ai', 'ai.jpg', 'A sheet of paper reading "Artificial Intelligence" rolled into a typewriter'),
   uiux: photo('uiux', 'ui-ux-design.jpg', 'A hand sketching app wireframes on a tablet with a stylus'),
-  ecommerce: photo('ecommerce', 'ecommerce.jpg', 'Person entering a credit card while checking out on a laptop'),
-  integration: photo('integration', 'integration.jpg', 'Network patch panel with cables connecting different systems'),
-  enterprise: photo('enterprise', 'enterprise.jpg', 'Two colleagues discussing work with a laptop at a meeting table'),
-  teamCareers: photo('teamCareers', 'team-careers.jpg', 'A team working together on laptops around a table'),
-} satisfies Record<string, { src: string; alt: string }>;
-
-export type SiteImage = (typeof SITE_IMAGES)[keyof typeof SITE_IMAGES];
+  ecommerce: photo('ecommerce', 'ecommerce.jpg', 'A hand holding a payment card in front of an open laptop at Asva Innovation Lab, ready to pay for an online order', 'ecommerce.jpg', 'center 42%'),
+  integration: photo('integration', 'integration.jpg', 'A laptop on a stand at Asva Innovation Lab connected through a USB-C hub, linking several devices into one system', 'integration.jpg', 'center 35%'),
+  // Keep developer, dual screens and keyboard framed cleanly across 4:3, 16:10 and 16:9 containers.
+  enterprise: photo('enterprise', 'enterprise.jpg', 'Two colleagues discussing work with a laptop at a meeting table', 'enterprise.jpg', '50% 55%'),
+  teamCareers: photo('teamCareers', 'team-careers.jpg', 'A training session at Asva Innovation Lab: team members at laptops around a long desk while a colleague works through a diagram on the whiteboard'),
+} satisfies Record<string, SiteImage>;
 
 const SERVICE_FALLBACKS = [SITE_IMAGES.webDev, SITE_IMAGES.mobileApp, SITE_IMAGES.analytics, SITE_IMAGES.cloud, SITE_IMAGES.ai, SITE_IMAGES.teamReview];
 
@@ -90,7 +105,7 @@ const SERVICE_KEYWORDS: [RegExp, SiteImage][] = [
   [/\bapi\b|integrat/i, SITE_IMAGES.integration],
   [/cloud|devops|hosting|infrastructure|deploy/i, SITE_IMAGES.cloud],
   [/data|analytic|dashboard|report|bi\b/i, SITE_IMAGES.analytics],
-  [/\btest|\bqa\b|quality assurance/i, SITE_IMAGES.teamReview],
+  [/\btest|\bqa\b|quality assurance/i, SITE_IMAGES.qaTesting],
   [/enterprise|consult|strategy/i, SITE_IMAGES.enterprise],
   [/\bcustom\b/i, SITE_IMAGES.customSoftware],
   [/\bweb\b.*\bapp/i, SITE_IMAGES.webApp],

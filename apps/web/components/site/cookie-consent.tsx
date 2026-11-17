@@ -141,7 +141,7 @@ export function ConsentProvider({ enabled, message, policyHref, analytics, child
 export function CookieSettingsButton() {
   const { open } = useContext(ConsentContext);
   return (
-    <button type="button" onClick={open} className="transition hover:text-white">
+    <button type="button" onClick={open} className="transition-colors hover:text-ink">
       Cookie settings
     </button>
   );

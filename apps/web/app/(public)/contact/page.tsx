@@ -1,8 +1,11 @@
+import { ExternalLink } from 'lucide-react';
 import type { Metadata } from 'next';
 import { ContactForm } from '@/components/forms/contact-form';
 import { Eyebrow, PageHero, Section, TextLink } from '@/components/site/blocks';
 import { getSettings } from '@/lib/api/public';
 import { buildMetadata } from '@/lib/seo';
+
+const OFFICE_NAME = 'Asva Lab Pvt. Ltd';
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata(await getSettings(), {
@@ -15,6 +18,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactPage() {
   const { contact, social } = await getSettings();
   const address = [contact.addressLine, contact.city, contact.country].filter(Boolean).join(', ');
+  // Admin-configured embed wins; otherwise show the office on Google Maps from its name/address.
+  const mapQuery = [OFFICE_NAME, contact.addressLine, contact.city, contact.country].filter(Boolean).join(', ');
+  const mapSrc = contact.mapEmbedUrl ?? `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&z=16&output=embed`;
+  const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
   const hasDetails = contact.email || contact.phone || contact.whatsapp || address;
 
   return (
@@ -98,9 +105,17 @@ export default async function ContactPage() {
                 <TextLink href="/start-a-project">Start a project</TextLink>
               </div>
             </div>
-            {contact.mapEmbedUrl && (
-              <iframe src={contact.mapEmbedUrl} title="Office location map" loading="lazy" referrerPolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups" className="aspect-[4/3] w-full rounded-lg border" />
-            )}
+            <div className="relative overflow-hidden rounded-lg border">
+              <iframe src={mapSrc} title="Office location map" loading="lazy" referrerPolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups" className="block aspect-[4/3] w-full" />
+              <a
+                href={mapLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-md bg-white px-3 py-2 text-[13px] font-medium text-brand shadow-md transition hover:bg-neutral-50"
+              >
+                Open in Maps <ExternalLink className="size-3.5" aria-hidden />
+              </a>
+            </div>
           </aside>
         </div>
       </Section>

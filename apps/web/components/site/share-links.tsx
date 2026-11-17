@@ -3,6 +3,35 @@
 import { Check, Link2, Share2 } from 'lucide-react';
 import { useState } from 'react';
 
+/**
+ * `navigator.clipboard` is unavailable on insecure origins and in some in-app browsers, and can
+ * reject when the document is not focused — fall back to a hidden textarea so the button still works.
+ */
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // fall through to the legacy path
+  }
+  try {
+    const field = document.createElement('textarea');
+    field.value = text;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.appendChild(field);
+    field.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(field);
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 export function ShareLinks({ url, title }: { url: string; title: string }) {
   const [copied, setCopied] = useState(false);
   const enc = encodeURIComponent;
@@ -25,7 +54,7 @@ export function ShareLinks({ url, title }: { url: string; title: string }) {
       <button
         type="button"
         onClick={async () => {
-          await navigator.clipboard.writeText(url);
+          if (!(await copyToClipboard(url))) return;
           setCopied(true);
           setTimeout(() => setCopied(false), 2000);
         }}
