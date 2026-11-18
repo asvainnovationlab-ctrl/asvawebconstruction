@@ -67,16 +67,16 @@ describe('Public content rendering', () => {
     const { container, rerender } = render(<ServiceFeature service={customService} index={0} />);
     let img = container.querySelector('img');
     expect(img).not.toBeNull();
-    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/custom-software.webp'));
+    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/custom-software.png'));
     expect(img).toHaveAttribute('alt', expect.stringMatching(/custom software/i));
-    expect(img).toHaveStyle({ objectPosition: '50% 63%' });
+    expect(img).toHaveStyle({ objectPosition: '50% 55%' });
 
     rerender(<ServiceRow service={customService} index={0} />);
     img = container.querySelector('img');
     expect(img).not.toBeNull();
-    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/custom-software.webp'));
+    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/custom-software.png'));
     expect(img).toHaveAttribute('alt', expect.stringMatching(/custom software/i));
-    expect(img).toHaveStyle({ objectPosition: '50% 63%' });
+    expect(img).toHaveStyle({ objectPosition: '50% 55%' });
 
     const enterpriseService = {
       name: 'Enterprise Software Solutions',
@@ -88,16 +88,16 @@ describe('Public content rendering', () => {
     rerender(<ServiceFeature service={enterpriseService} index={1} />);
     img = container.querySelector('img');
     expect(img).not.toBeNull();
-    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/enterprise.jpg'));
+    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/enterprise.webp'));
     expect(img).toHaveAttribute('alt', expect.stringMatching(/enterprise software/i));
-    expect(img).toHaveStyle({ objectPosition: '50% 55%' });
+    expect(img).toHaveStyle({ objectPosition: '50% 50%' });
 
     rerender(<ServiceRow service={enterpriseService} index={1} />);
     img = container.querySelector('img');
     expect(img).not.toBeNull();
-    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/enterprise.jpg'));
+    expect(img?.getAttribute('src')).toContain(encodeURIComponent('/images/company/enterprise.webp'));
     expect(img).toHaveAttribute('alt', expect.stringMatching(/enterprise software/i));
-    expect(img).toHaveStyle({ objectPosition: '50% 55%' });
+    expect(img).toHaveStyle({ objectPosition: '50% 50%' });
   });
 });
 
