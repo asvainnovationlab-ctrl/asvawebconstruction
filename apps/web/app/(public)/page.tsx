@@ -23,7 +23,11 @@ export default async function HomePage() {
   return (
     <>
       {/* ------------------------------------------------------------------ Hero */}
-      <section aria-labelledby="hero-title" className="border-b bg-white">
+      <section aria-labelledby="hero-title" className="hero-scene relative isolate overflow-hidden border-b bg-white">
+        <div aria-hidden className="hero-glow pointer-events-none absolute inset-0 -z-10" />
+        <div aria-hidden className="hero-grid pointer-events-none absolute inset-0 -z-10 opacity-40" />
+        <div aria-hidden className="hero-orb hero-orb-one pointer-events-none absolute -right-20 top-12 -z-10 size-64 rounded-full bg-brand/10 blur-3xl sm:size-80" />
+        <div aria-hidden className="hero-orb hero-orb-two pointer-events-none absolute bottom-0 left-[38%] -z-10 size-48 rounded-full bg-accent/15 blur-3xl" />
         <div className="container-page grid items-center gap-14 pb-16 pt-12 sm:pt-16 lg:grid-cols-12 lg:gap-10 lg:pb-28 lg:pt-24">
           <div className="lg:col-span-7">
             {home.hero.eyebrow && (
@@ -34,16 +38,20 @@ export default async function HomePage() {
             <h1 id="hero-title" className="type-hero hero-in mt-6 max-w-3xl text-ink" style={enter(90)}>
               {home.hero.headline}
             </h1>
-            <p className="type-lead hero-in mt-6 max-w-xl text-muted-ink" style={enter(190)}>
+            <div className="hero-in mt-6 h-1 w-16 rounded-full bg-brand" style={enter(150)} aria-hidden />
+            <p className="type-lead hero-in mt-5 max-w-xl text-muted-ink" style={enter(190)}>
               {home.hero.subheadline}
             </p>
             <div className="hero-in mt-9 flex flex-col gap-3 sm:flex-row" style={enter(290)}>
               <Button asChild size="lg">
                 <Link href={home.hero.primaryCta.href}>{home.hero.primaryCta.label}</Link>
               </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/portfolio">Explore our work</Link>
+              </Button>
             </div>
           </div>
-          <div className="hero-in lg:col-span-5" style={enter(380)}>
+          <div className="hero-in hero-visual-wrap lg:col-span-5" style={enter(380)}>
             <HeroVisual
               services={services}
               image={settings.media.heroImage ? { src: settings.media.heroImage.url, alt: settings.media.heroImage.alt } : null}
