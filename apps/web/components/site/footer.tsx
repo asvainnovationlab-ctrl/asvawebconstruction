@@ -9,6 +9,9 @@ export function SiteFooter({ settings, navigation, services }: { settings: Publi
   const address = [contact.addressLine, contact.city, contact.country].filter(Boolean).join(', ');
   const year = new Date().getFullYear();
   const linkClass = 'text-[14px] text-muted-ink transition-colors hover:text-ink';
+  const companyLinks = navigation.FOOTER_QUICK_LINKS.some((item) => item.href === '/courses')
+    ? navigation.FOOTER_QUICK_LINKS
+    : [...navigation.FOOTER_QUICK_LINKS, { id: 'courses', label: 'Courses', href: '/courses', isExternal: false, openInNewTab: false }];
 
   return (
     <footer className="border-t bg-white">
@@ -49,7 +52,7 @@ export function SiteFooter({ settings, navigation, services }: { settings: Publi
           </div>
 
           <FooterColumn title="Company" className="md:col-span-2">
-            {navigation.FOOTER_QUICK_LINKS.map((item) => (
+            {companyLinks.map((item) => (
               <li key={item.id}>
                 <Link href={item.href} target={item.openInNewTab ? '_blank' : undefined} className={linkClass}>
                   {item.label}

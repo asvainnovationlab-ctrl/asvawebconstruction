@@ -96,7 +96,7 @@ export const SITE_IMAGES = {
 
 const SERVICE_FALLBACKS = [SITE_IMAGES.webDev, SITE_IMAGES.mobileApp, SITE_IMAGES.analytics, SITE_IMAGES.cloud, SITE_IMAGES.ai, SITE_IMAGES.teamReview];
 
-/** Checked in order — more specific services (e.g. "Website Design") must be matched before the generic web/software catch-all. */
+/** Ch  ecked in order — more specific services (e.g. "Website Design") must be matched before the generic web/software catch-all. */
 const SERVICE_KEYWORDS: [RegExp, SiteImage][] = [
   [/mobile|android|ios|app\b/i, SITE_IMAGES.mobileApp],
   [/\bai\b|machine|intelligen|automation/i, SITE_IMAGES.ai],

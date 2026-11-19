@@ -7,6 +7,7 @@ import { SITE_IMAGES } from '@/lib/site-images';
 import { Reveal } from '@/components/site/reveal';
 import { HeroVisual } from '@/components/site/hero-visual';
 import { Button } from '@/components/ui/button';
+import { COURSES } from '@/lib/courses';
 import { getServices, getSettings, getTechnologies, getTestimonials } from '@/lib/api/public';
 import { buildMetadata } from '@/lib/seo';
 
@@ -23,7 +24,7 @@ export default async function HomePage() {
   return (
     <>
       {/* ------------------------------------------------------------------ Hero */}
-      <section aria-labelledby="hero-title" className="hero-scene relative isolate overflow-hidden border-b bg-white">
+      <section aria-labelledby="hero-title" className="hero-scene relative isolate overflow-hidden border-b border-white/10 bg-ink text-white">
         <div aria-hidden className="hero-glow pointer-events-none absolute inset-0 -z-10" />
         <div aria-hidden className="hero-grid pointer-events-none absolute inset-0 -z-10 opacity-40" />
         <div aria-hidden className="hero-orb hero-orb-one pointer-events-none absolute -right-20 top-12 -z-10 size-64 rounded-full bg-brand/10 blur-3xl sm:size-80" />
@@ -31,22 +32,22 @@ export default async function HomePage() {
         <div className="container-page grid items-center gap-14 pb-16 pt-12 sm:pt-16 lg:grid-cols-12 lg:gap-10 lg:pb-28 lg:pt-24">
           <div className="lg:col-span-7">
             {home.hero.eyebrow && (
-              <p className="hero-in text-[13px] font-semibold tracking-[0.06em] text-brand" style={enter(0)}>
+              <p className="hero-in text-[13px] font-semibold tracking-[0.08em] text-brand-vivid" style={enter(0)}>
                 {home.hero.eyebrow}
               </p>
             )}
-            <h1 id="hero-title" className="type-hero hero-in mt-6 max-w-3xl text-ink" style={enter(90)}>
+            <h1 id="hero-title" className="type-hero hero-in mt-6 max-w-3xl text-white" style={enter(90)}>
               {home.hero.headline}
             </h1>
             <div className="hero-in mt-6 h-1 w-16 rounded-full bg-brand" style={enter(150)} aria-hidden />
-            <p className="type-lead hero-in mt-5 max-w-xl text-muted-ink" style={enter(190)}>
+            <p className="type-lead hero-in mt-5 max-w-xl text-mist" style={enter(190)}>
               {home.hero.subheadline}
             </p>
             <div className="hero-in mt-9 flex flex-col gap-3 sm:flex-row" style={enter(290)}>
               <Button asChild size="lg">
                 <Link href={home.hero.primaryCta.href}>{home.hero.primaryCta.label}</Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
+              <Button asChild size="lg" variant="outline-dark">
                 <Link href="/portfolio">Explore our work</Link>
               </Button>
             </div>
@@ -92,7 +93,7 @@ export default async function HomePage() {
 
       {/* ------------------------------------------------------------------ Services (alternating photo / description) */}
       {services.length > 0 && (
-        <Section labelledBy="services-title">
+        <Section tone="muted" labelledBy="services-title">
           <div className="container-page">
             <SectionHeading id="services-title" title={home.services.heading} description={home.services.subheading} />
             <div className="mt-14 space-y-16 lg:mt-16 lg:space-y-24">
@@ -150,6 +151,41 @@ export default async function HomePage() {
           </div>
         </Section>
       )}
+
+      {/* ------------------------------------------------------------------ Tech classes */}
+      <Section labelledBy="classes-title">
+        <div className="container-page grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <p className="type-label font-semibold text-brand">Learn with Asva</p>
+            <h2 id="classes-title" className="type-section mt-3 text-ink">
+              Grow your skills with practical technology courses
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-muted-ink sm:text-[17px]">
+              Explore courses across different IT fields, led by a team working hands-on in technology.
+            </p>
+            <Button asChild className="mt-7">
+              <Link href="/courses">Explore courses</Link>
+            </Button>
+          </div>
+          <ul className="grid gap-x-8 sm:grid-cols-2 lg:col-span-7">
+            {COURSES.map((track, i) => (
+              <li key={track.title} className="flex items-center gap-4 border-t py-4">
+                <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-md border bg-white p-2">
+                  <svg aria-hidden viewBox="0 0 24 24" className="size-full" fill={`#${track.brand.icon.hex}`}>
+                    <path d={track.brand.icon.path} />
+                  </svg>
+                </div>
+                <div>
+                  <span aria-hidden className="font-mono text-[11px] font-semibold tracking-[0.12em] text-brand">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className="mt-1 text-[15px] font-medium text-ink">{track.title}</h3>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Section>
 
       {/* ------------------------------------------------------------------ Testimonials (approved + consented only) */}
       {testimonials.length > 0 && (
