@@ -21,15 +21,6 @@ test.describe('Visitor journeys', () => {
     await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toContainText('Services');
   });
 
-  test('3. opens a published portfolio project', async ({ page }) => {
-    await page.goto('/portfolio');
-    const card = page.locator('a[href^="/portfolio/"]').first();
-    await card.click();
-    await expect(page).toHaveURL(/\/portfolio\/.+/);
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'The challenge' })).toBeVisible();
-  });
-
   test('4. submits the contact form', async ({ page }) => {
     await page.goto('/contact');
     await page.getByLabel('Full name').fill('E2E Visitor');

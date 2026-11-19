@@ -7,6 +7,7 @@ import type {
   Job,
   JobSummary,
   Navigation,
+  NavItem,
   PublicSettings,
   Service,
   TeamMember,
@@ -25,8 +26,13 @@ export const getSettings = cache(async (): Promise<PublicSettings> => {
   return (await apiGet<PublicSettings>('/settings/public', { tags: ['settings'] })) ?? FALLBACK_SETTINGS;
 });
 
+/** Sections removed from the site. Menu links to them are hidden even if they are still saved in the CMS. */
+const REMOVED_PATHS = /^\/(portfolio|blog)(\/|$)/;
+
 export const getNavigation = cache(async (): Promise<Navigation> => {
-  return (await apiGet<Navigation>('/navigation', { tags: ['navigation'] })) ?? { HEADER: [], FOOTER_QUICK_LINKS: [], FOOTER_LEGAL: [] };
+  const nav = (await apiGet<Navigation>('/navigation', { tags: ['navigation'] })) ?? { HEADER: [], FOOTER_QUICK_LINKS: [], FOOTER_LEGAL: [] };
+  const keep = (items: NavItem[]) => items.filter((i) => !REMOVED_PATHS.test(i.href));
+  return { HEADER: keep(nav.HEADER), FOOTER_QUICK_LINKS: keep(nav.FOOTER_QUICK_LINKS), FOOTER_LEGAL: keep(nav.FOOTER_LEGAL) };
 });
 
 export const getServices = cache(async () => (await apiGet<Service[]>('/services', { tags: ['services'] })) ?? []);
