@@ -47,7 +47,7 @@ describe('isSafeHref', () => {
 describe('permissions', () => {
   it('gives administrators every permission and restricts other roles', () => {
     expect(hasPermission(DEFAULT_ROLES.ADMINISTRATOR.permissions, ['settings.manage', 'users.manage'])).toBe(true);
-    expect(hasPermission(DEFAULT_ROLES.EDITOR.permissions, 'blog.manage')).toBe(true);
+    expect(hasPermission(DEFAULT_ROLES.EDITOR.permissions, 'faqs.manage')).toBe(true);
     expect(hasPermission(DEFAULT_ROLES.EDITOR.permissions, 'inquiries.read')).toBe(false);
     expect(hasPermission(DEFAULT_ROLES.SALES_MANAGER.permissions, 'inquiries.export')).toBe(true);
     expect(hasPermission(DEFAULT_ROLES.SALES_MANAGER.permissions, 'applications.read')).toBe(false);

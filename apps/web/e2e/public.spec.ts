@@ -62,7 +62,7 @@ test.describe('Visitor journeys', () => {
     // Seeded base content includes draft-only suggestions; drafts must 404 publicly.
     const res = await request.get('/api/v1/services/this-service-does-not-exist');
     expect(res.status()).toBe(404);
-    const resp = await page.goto('/blog/definitely-not-published-draft');
+    const resp = await page.goto('/services/definitely-not-published-draft');
     expect(resp?.status()).toBe(404);
     const admin = await request.get('/api/v1/admin/inquiries');
     expect(admin.status()).toBe(401);

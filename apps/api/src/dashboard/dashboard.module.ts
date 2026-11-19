@@ -30,14 +30,8 @@ export class DashboardController {
     const previous = new Date(since.getTime() - query.days * 86_400_000);
     const published = { status: ContentStatus.PUBLISHED };
 
-    const content = can(PERMISSIONS.SERVICES_MANAGE) || can(PERMISSIONS.PROJECTS_MANAGE) || can(PERMISSIONS.BLOG_MANAGE)
-      ? await Promise.all([
-          this.prisma.service.count({ where: published }),
-          this.prisma.project.count({ where: published }),
-          this.prisma.blogPost.count({ where: published }),
-          this.prisma.blogPost.count({ where: { status: ContentStatus.SCHEDULED } }),
-          this.prisma.blogPost.count({ where: { status: ContentStatus.DRAFT } }),
-        ]).then(([services, projects, posts, scheduledPosts, draftPosts]) => ({ services, projects, posts, scheduledPosts, draftPosts }))
+    const content = can(PERMISSIONS.SERVICES_MANAGE)
+      ? { services: await this.prisma.service.count({ where: published }) }
       : null;
 
     const leads = can(PERMISSIONS.INQUIRIES_READ)

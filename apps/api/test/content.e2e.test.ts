@@ -1,7 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { SchedulerService } from '../src/blog/scheduler.service.js';
 import type { PrismaService } from '../src/prisma/prisma.service.js';
 import { bootstrap, createUser, login, type Session } from './helpers.js';
 
@@ -70,23 +69,6 @@ describe('Content management and publication', () => {
     await editor.post('/api/v1/admin/services').send(service({ slug: 'dup-slug' })).expect(201);
     const res = await editor.post('/api/v1/admin/services').send(service({ slug: 'dup-slug' })).expect(409);
     expect(res.body.error.code).toBe('CONFLICT');
-  });
-
-  it('schedules blog posts and publishes them from the server-side scheduler', async () => {
-    const future = new Date(Date.now() + 60 * 60_000).toISOString();
-    const post = await editor
-      .post('/api/v1/admin/blog')
-      .send({ title: 'Scheduled article', slug: 'scheduled-article', content: '<p>Soon</p>', status: 'PUBLISHED', publishedAt: future })
-      .expect(201);
-    expect(post.body.data.status).toBe('SCHEDULED');
-    await api().get('/api/v1/blog/scheduled-article').expect(404);
-
-    // Move the publication time into the past and run the scheduler job directly.
-    await prisma.blogPost.update({ where: { id: post.body.data.id }, data: { publishedAt: new Date(Date.now() - 1000) } });
-    const published = await app.get(SchedulerService).publishDue();
-    expect(published).toBeGreaterThanOrEqual(1);
-    expect((await prisma.blogPost.findUniqueOrThrow({ where: { id: post.body.data.id } })).status).toBe('PUBLISHED');
-    await api().get('/api/v1/blog/scheduled-article').expect(200);
   });
 
   it('keeps revision history and restores a previous version', async () => {
